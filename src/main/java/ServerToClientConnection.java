@@ -46,9 +46,13 @@ public class ServerToClientConnection extends Thread {
         }
     }
 
-    private void send(String message) throws IOException {
-        socketWriter.write(message + "\n");
-        socketWriter.flush();
+    private void send(String message) {
+        try {
+            socketWriter.write(message + "\n");
+            socketWriter.flush();
+        } catch (IOException e) {
+            e.getMessage();
+        }
     }
 
     private void downService() {
