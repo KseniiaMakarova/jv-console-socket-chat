@@ -25,21 +25,17 @@ public class ServerToClientConnection extends Thread {
             message = socketReader.readLine();
             socketWriter.write(message + "\n");
             socketWriter.flush();
-            try {
-                while (true) {
-                    message = socketReader.readLine();
-                    if (message.equals("stop")) {
-                        this.downService();
-                        break;
-                    }
-                    System.out.println("Echoing: " + message);
-                    Server.messageStory.addToStory(message);
-                    for (ServerToClientConnection connection : Server.serverConnections) {
-                        connection.send(message);
-                    }
+            while (true) {
+                message = socketReader.readLine();
+                if (message == null || message.equals("stop")) {
+                    this.downService();
+                    break;
                 }
-            } catch (NullPointerException e) {
-                e.getMessage();
+                System.out.println("Echoing: " + message);
+                Server.messageStory.addToStory(message);
+                for (ServerToClientConnection connection : Server.serverConnections) {
+                    connection.send(message);
+                }
             }
         } catch (IOException e) {
             this.downService();
